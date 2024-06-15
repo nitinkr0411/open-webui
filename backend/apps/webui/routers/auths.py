@@ -29,7 +29,7 @@ from utils.utils import (
     get_admin_user,
     create_token,
     create_api_key,
-    decode_token
+    decode_token_from_alb
 )
 from utils.misc import parse_duration, validate_email_format
 from utils.webhook import post_webhook
@@ -129,7 +129,7 @@ async def signin(request: Request, response: Response, form_data: SigninForm):
             raise HTTPException(400, detail=ERROR_MESSAGES.INVALID_TRUSTED_HEADER)
 
         jwt = request.headers[WEBUI_AUTH_TRUSTED_EMAIL_HEADER]
-        trusted_email = decode_token(jwt)["email"]
+        trusted_email = decode_token_from_alb(jwt)["email"]
         trusted_name = trusted_email
         if WEBUI_AUTH_TRUSTED_NAME_HEADER:
             trusted_name = request.headers.get(
