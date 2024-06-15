@@ -29,6 +29,7 @@ from utils.utils import (
     get_admin_user,
     create_token,
     create_api_key,
+    decode_token
 )
 from utils.misc import parse_duration, validate_email_format
 from utils.webhook import post_webhook
@@ -105,16 +106,13 @@ async def update_password(
 
 @router.post("/signin", response_model=SigninResponse)
 async def signin(request: Request, form_data: SigninForm):
-    # print all headers
-    for name, value in request.headers.items():
-        logging.info(f"Header: {name} = {value}")
-        print(f"Header: {name} = {value}")
-        logging.error(f"Header: {name} = {value}")
     if WEBUI_AUTH_TRUSTED_EMAIL_HEADER:
         if WEBUI_AUTH_TRUSTED_EMAIL_HEADER not in request.headers:
             raise HTTPException(400, detail=ERROR_MESSAGES.INVALID_TRUSTED_HEADER)
 
-        trusted_email = request.headers[WEBUI_AUTH_TRUSTED_EMAIL_HEADER].lower()
+        # trusted_email = request.headers[WEBUI_AUTH_TRUSTED_EMAIL_HEADER].lower()
+        jwt = request.headers[WEBUI_AUTH_TRUSTED_EMAIL_HEADER]
+        trusted_email = decode_token(jwt)["email"]
         if not Users.get_user_by_email(trusted_email.lower()):
             await signup(
                 request,
