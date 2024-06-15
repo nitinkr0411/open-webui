@@ -29,7 +29,7 @@ from utils.utils import (
     get_admin_user,
     create_token,
     create_api_key,
-    decode_token
+    decode_token_from_alb
 )
 from utils.misc import parse_duration, validate_email_format
 from utils.webhook import post_webhook
@@ -112,7 +112,7 @@ async def signin(request: Request, form_data: SigninForm):
 
         # trusted_email = request.headers[WEBUI_AUTH_TRUSTED_EMAIL_HEADER].lower()
         jwt = request.headers[WEBUI_AUTH_TRUSTED_EMAIL_HEADER]
-        trusted_email = decode_token(jwt)["email"]
+        trusted_email = decode_token_from_alb(jwt)["email"]
         if not Users.get_user_by_email(trusted_email.lower()):
             await signup(
                 request,

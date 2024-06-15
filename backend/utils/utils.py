@@ -55,6 +55,13 @@ def decode_token(token: str) -> Optional[dict]:
         return decoded
     except Exception as e:
         return None
+    
+def decode_token_from_alb(token: str) -> Optional[dict]:
+    try:
+        decoded = jwt.decode(token, verify=False, algorithms=[ALGORITHM])
+        return decoded
+    except Exception as e:
+        return None
 
 
 def extract_token_from_auth_header(auth_header: str):
