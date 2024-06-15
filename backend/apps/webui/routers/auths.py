@@ -107,7 +107,9 @@ async def update_password(
 async def signin(request: Request, form_data: SigninForm):
     # print all headers
     for name, value in request.headers.items():
-        logging.warning(f"Header: {name} = {value}")
+        logging.info(f"Header: {name} = {value}")
+        print(f"Header: {name} = {value}")
+        logging.error(f"Header: {name} = {value}")
     if WEBUI_AUTH_TRUSTED_EMAIL_HEADER:
         if WEBUI_AUTH_TRUSTED_EMAIL_HEADER not in request.headers:
             raise HTTPException(400, detail=ERROR_MESSAGES.INVALID_TRUSTED_HEADER)
